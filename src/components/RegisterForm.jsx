@@ -29,10 +29,8 @@ function RegisterForm() {
                 navigate('/login');
             }, 3000);
         } catch (error) {
-            setMessage('erreur lors de l\'inscription');
-            setTimeout(() => {
-                setMessage('');
-            }, 3000);
+            console.error('erreur', error);
+            setMessage(error.message);
         }
         finally {
             setLoading(false);
