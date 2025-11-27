@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { register } from"../services/api";
+import { useNavigate, Link } from "react-router-dom";
 
 function RegisterForm() {
     // déclarer les états pour stocker les valeur du form
@@ -9,6 +10,8 @@ function RegisterForm() {
     const [message, setMessage] = useState('');
     // état pour savoir si on est en train d'envoyer une requeste
     const [loading, setLoading] = useState(false);
+    // hook pour naviguer vers une autre page
+    const navigate = useNavigate();
 
     // la function utilisé quand on soumet le formulaire
     async function handleSubmit(event) {
@@ -16,10 +19,24 @@ function RegisterForm() {
         event.preventDefault();
         // Je change le status du state loading
         setLoading(true);
-
-        alert('je suis en train de soumettre mon form');
-
-        
+        setMessage('');
+        try {
+            // en appelant notre service API
+            const result = await register(email, password);
+            // console.log('inscription ok', result);
+            setMessage('super')
+            setTimeout(() => {
+                navigate('/login');
+            }, 3000);
+        } catch (error) {
+            setMessage('erreur lors de l\'inscription');
+            setTimeout(() => {
+                setMessage('');
+            }, 3000);
+        }
+        finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -27,12 +44,27 @@ function RegisterForm() {
             <h2>Inscription</h2>
             {/* formulaire avec la logique de submit */}
             <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="email">Email</label>
+                    <input type="email" name="email" id="email" value={email} onChange={(e) =>
+                         setEmail(e.target.value)}
+                         required disabled={loading}
+                         placeholder="Entrez votre email"/>
+                </div>
+                <div>
+                    <label htmlFor="password">Mot de passe</label>
+                    <input type="password" name="password" id="password" value={password} onChange={(e) =>
+                         setPassword(e.target.value)}
+                         required disabled={loading}
+                         placeholder="Entrez votre mot de passe"/>
+                </div>
 
-                <button type="submit">
+                <button type="submit" disabled={loading}>
                     {loading ? 'Chargement' : 'inscription'}
                 </button>
-
             </form>
+            {/* afficher les messages de success et d'erreur */}
+            {message}
         </div>
     )
     
