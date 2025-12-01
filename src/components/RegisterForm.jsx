@@ -6,6 +6,8 @@ function RegisterForm() {
     // déclarer les états pour stocker les valeur du form
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [city, setCity] = useState('');
+    const [birthdate, setBirthDate] = useState('');
     // etat pour stocker les messages d'erreur
     const [message, setMessage] = useState('');
     // état pour savoir si on est en train d'envoyer une requeste
@@ -22,9 +24,9 @@ function RegisterForm() {
         setMessage('');
         try {
             // en appelant notre service API
-            const result = await register(email, password);
+            const result = await register(email, password, city, birthdate);
             // console.log('inscription ok', result);
-            setMessage('super')
+            setMessage('Insccription réussi')
             setTimeout(() => {
                 navigate('/login');
             }, 3000);
@@ -56,6 +58,20 @@ function RegisterForm() {
                          required disabled={loading}
                          placeholder="Entrez votre mot de passe"/>
                 </div>
+                <div>
+                    <label htmlFor="city">Ville de naissance</label>
+                    <input type="text" name="city" id="city" value={city} onChange={(e) =>
+                         setCity(e.target.value)}
+                         required disabled={loading}
+                         placeholder="Entrez votre ville de naissance"/>
+                </div>
+                <div>
+                    <label htmlFor="birthdate">Date de naissance</label>
+                    <input type="date" name="birthdate" id="birthdate" value={birthdate} onChange={(e) =>
+                         setBirthDate(e.target.value)}
+                         required disabled={loading}
+                         placeholder="Entrez votre date de naissance"/>
+                </div>
 
                 <button type="submit" disabled={loading}>
                     {loading ? 'Chargement' : 'inscription'}
@@ -63,6 +79,7 @@ function RegisterForm() {
             </form>
             {/* afficher les messages de success et d'erreur */}
             {message}
+            <div>Déjà inscrit ?<Link to={'/login'}>Se connecter</Link></div>
         </div>
     )
     

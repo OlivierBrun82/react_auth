@@ -1,8 +1,10 @@
+import { useNavigate } from "react-router-dom";
+
 // récupère l'url de l'api défini dans le fichier .env
 const API_URL = import.meta.env.VITE_API_URL;
 
 // logique d'inscription
-export async function register(email, password) {
+export async function register(email, password, city, birthdate) {
     // faire la request POST sur l'url /api/auth/register
     const response = await fetch(`${API_URL}/api/auth/register`, {
         method: 'POST',
@@ -10,7 +12,7 @@ export async function register(email, password) {
             'Content-Type': 'application/json'
         },
         // passer les data au body
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, city, birthdate}),
 
     });
     // parse la response JSON
@@ -49,10 +51,10 @@ export async function login(email, password) {
     return data;
 }
 
-export async function getProfil(token) {
+export async function getProfile(token) {
     // on prépare la requête GET sur la route /api/auth/profil
     // pour les routes qui nécessite une connexion, on doit passer dans le header le Token
-    const reponse = await fetch(`${API_URL}/api/auth/profil`, {
+    const response = await fetch(`${API_URL}/api/auth/profile`, {
         method: 'GET',
         headers: {
              'Content-Type' : 'application/json',
@@ -67,6 +69,7 @@ export async function getProfil(token) {
     if(!response.ok) {
         throw new Error(data.Error || 'erreur lors de la récupération du profil')
     }
+
 
     return data;
 }
